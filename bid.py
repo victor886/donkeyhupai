@@ -128,7 +128,8 @@ def getPageTime(type = 'getPageTime', q = queue.Queue()):
     except:
         sys_time = int(round(time.time() * 1000))
         im.save('./log/' + 'pagetime_' + str(sys_time)  + '.bmp')
-        #sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))        #print sys_time + "\t" +  u'获取网页时间错误'
+        #sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        #print sys_time + "\t" +  u'获取网页时间错误'
         q.put(0)
         return 0
         #raise
@@ -152,7 +153,8 @@ def getLowestPrice(type = 'getLowestPrice', q = queue.Queue()):
     except:
         sys_time = int(round(time.time() * 1000))
         im.save('./log/' + 'lowestprice_' + str(sys_time) + '.bmp') 
-        #sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))        #print sys_time + "\t" +  u'获取最低成交价错误'
+        #sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        #print sys_time + "\t" +  u'获取最低成交价错误'
         q.put(0)
         return 0
         #raise
@@ -174,7 +176,8 @@ def getMyPrice():
     except:
         sys_time = int(round(time.time() * 1000))
         im.save('./log/' + 'myprice_' + str(sys_time) + '.bmp')        
-        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))        print sys_time + "\t" + u'获取我的出价错误'
+        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        print sys_time + "\t" + u'获取我的出价错误'
         return 0
         #raise
         
@@ -207,7 +210,8 @@ def pricePlan():
             if flag == False:
                 btn_add_price.Enable(True)
                 input_text_time.SetValue(u"不在监控")
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                print sys_time + "\t" +  sys_time + "\t" + u"用户暂停"
+                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                print sys_time + "\t" +  sys_time + "\t" + u"用户暂停"
                 break
             time_start = int(round(time.time() * 1000))
             page_time = getPageTime()
@@ -215,19 +219,22 @@ def pricePlan():
             time_end = int(round(time.time() * 1000))
             ocr_time = time_end - time_start
             input_text_time.SetValue(str(page_time))
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" +  u"当前秒数：" + str(page_time) + "\t" + str(ocr_time)
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" +  u"当前秒数：" + str(page_time) + "\t" + str(ocr_time)
             if page_time >= self_time_second:
                 page_time_send = page_time
                 pyautogui.click(x=add_x, y=add_y) #加价
                 pyautogui.click(x=send_x, y=send_y) #出价
                 btn_add_price.Enable(True)
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                print sys_time + "\t" +  u"到了预设的加价时间，直接加价！"
+                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                print sys_time + "\t" +  u"到了预设的加价时间，直接加价！"
                 break
         input_text_time.SetValue(u"不在监控")
     except:
         btn_add_price.Enable(True)
         input_text_time.SetValue(u"不在监控")
-        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))        print sys_time + "\t" +  u"定时启动结束！"
+        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        print sys_time + "\t" +  u"定时启动结束！"
         return
 
 def autoConfirm():
@@ -252,7 +259,8 @@ def autoConfirm():
                 btn_confirm_price.Enable(True)
                 input_text_time.SetValue(u"不在监控")
                 input_text_lowest_price.SetValue(u"不在监控")
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                print sys_time + "\t" +  u"用户暂停"
+                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                print sys_time + "\t" +  u"用户暂停"
                 return
             
             time_start = int(round(time.time() * 1000)) 
@@ -275,7 +283,8 @@ def autoConfirm():
              
             time_end = int(round(time.time() * 1000))
             ocr_time = time_end - time_start
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" + str(page_time) + "\t" + str(highest_price) + "\t" + str(my_price) + "\t" + str(ocr_time)
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" + str(page_time) + "\t" + str(highest_price) + "\t" + str(my_price) + "\t" + str(ocr_time)
             
             #根据差价决定出价时机
             if advance_send_price_flag and page_time >= advance_work_time:
@@ -283,20 +292,23 @@ def autoConfirm():
                     time.sleep(delay_time)
                     pyautogui.click(x=confirm_x, y=confirm_y) #确定 
                     #btn_confirm_price.Enable(True)
-                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                    print sys_time + "\t" +  u"到了价格区间，直接出价！"
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" +  u"到了价格区间，直接出价！"
                     break
             else:
                 if lowest_price != 0 and my_price !=0 and my_price <= highest_price:
                     pyautogui.click(x=confirm_x, y=confirm_y) #确定 
                     #btn_confirm_price.Enable(True)
-                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                    print sys_time + "\t" +  u"到了价格区间，直接出价！"
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" +  u"到了价格区间，直接出价！"
                     break
                 
             #强制网页55秒出价
             if page_time >= force_send_time:                                
                 pyautogui.click(x=confirm_x, y=confirm_y) #确定
                 #btn_confirm_price.Enable(True)
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                print sys_time + "\t" +  u"到了强制出价时间，直接出价！"
+                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                print sys_time + "\t" +  u"到了强制出价时间，直接出价！"
                 break               
 
         #智能补抢
@@ -308,21 +320,25 @@ def autoConfirm():
                     btn_confirm_price.Enable(True)
                     input_text_time.SetValue(u"不在监控")
                     input_text_lowest_price.SetValue(u"不在监控")
-                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                    print sys_time + "\t" +  u"用户暂停"
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" +  u"用户暂停"
                     return                
                 return_btn = getReturnBtn()
                 if return_btn.find(u'确') != -1 or return_btn.find(u'定') != -1:
                     pyautogui.click(x = return_btn_confirm_x , y = return_btn_confirm_y) #确定
-                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                    print sys_time + "\t" +  u"服务器已经返回，将进行补抢!"
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" +  u"服务器已经返回，将进行补抢!"
                     break
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                print sys_time + "\t" +  u'等待返回补抢'
+                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                print sys_time + "\t" +  u'等待返回补抢'
                 
             while True:            
                 if flag == False:
                     btn_confirm_price.Enable(True)
                     input_text_time.SetValue(u"不在监控")
                     input_text_lowest_price.SetValue(u"不在监控")
-                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                    print sys_time + "\t" +  u"用户暂停"
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" +  u"用户暂停"
                     return
                     
                 t_getPageTime = threading.Thread(target=getPageTime, args=('getPageTime', q_getPageTime))
@@ -340,7 +356,8 @@ def autoConfirm():
                 q_getPageTime.queue.clear()
                 q_getLowestPrice.queue.clear()                
             
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                print sys_time + "\t" +  u"等待补抢时机:" + "\t" + str(page_time) + "\t" + str(lowest_price)
+                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                print sys_time + "\t" +  u"等待补抢时机:" + "\t" + str(page_time) + "\t" + str(lowest_price)
                 
                 if page_time >= supply_price_time:
 
@@ -356,7 +373,8 @@ def autoConfirm():
                     pyautogui.doubleClick(x=self_price_x, y=self_price_y) #双击自行输入价格输入框
                     pyautogui.typewrite(str(new_price)) #立即输入我的价格
                     pyautogui.click(x=send_x, y=send_y) #出价
-                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))                    print sys_time + "\t" + str(new_price) +"\t" + u"完成智能补抢..."
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" + str(new_price) +"\t" + u"完成智能补抢..."
                     break
         
         #完成后按钮恢复
@@ -368,7 +386,8 @@ def autoConfirm():
         btn_confirm_price.Enable(True)
         input_text_time.SetValue(u"不在监控")
         input_text_lowest_price.SetValue(u"不在监控")
-        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))        print sys_time + "\t" + u"智能确认异常结束！"
+        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        print sys_time + "\t" + u"智能确认异常结束！"
         return
 
 #更新检测      
@@ -378,7 +397,8 @@ def checkConfUpdate():
         if logged_in:                   
             global logged_type
             get_conf_file(logged_type)
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" + "checking update"
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" + "checking update"
             time.sleep(300)
         else:
             time.sleep(1)
@@ -499,7 +519,7 @@ class MyFrame(wx.Frame):
         consoleSizer.Add(self.notebook, 1, wx.EXPAND|wx.ALL, 5)
         
         self.consolePanel.SetSizer(consoleSizer)
-		
+        
         # layout
         mainSizer.Add(self.ie, 10, wx.EXPAND)
         mainSizer.Add(self.consolePanel, 3, wx.EXPAND)
@@ -894,7 +914,8 @@ class PageBasic(wx.Panel):
                 self_time_second = int(self.input_text_add_price_time.GetTextCtrl().GetValue())
             except:
                 self_time_second = 40 
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" + u"定时" + str(self_time_second) + u"秒加价启动"
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" + u"定时" + str(self_time_second) + u"秒加价启动"
             self.t_pricePlan = threading.Thread(target=pricePlan, args=())
             self.t_pricePlan.start()
         #self.panel.SetFocus()
@@ -940,7 +961,8 @@ class PageBasic(wx.Panel):
                 advance_price = 0
                 delay_time = 0
              
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" + u"智能确认启动!"
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" + u"智能确认启动!"
             self.t_autoConfirm = threading.Thread(target=autoConfirm, args=())
             self.t_autoConfirm.start()
         #self.panel.SetFocus()        
@@ -997,7 +1019,8 @@ class LoginFrame(sized_controls.SizedDialog):
         
     def on_btn_test(self, event):
         self.SetTitle(u"体验版登录成功")
-        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))        print sys_time + "\t" +  u"体验版登录成功"
+        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        print sys_time + "\t" +  u"体验版登录成功"
         global logged_in, logged_type
         logged_in = True
         logged_type = 'test'
@@ -1006,6 +1029,7 @@ class LoginFrame(sized_controls.SizedDialog):
     def on_btn_login(self, event):
         self.SetTitle(u"正式环境登录成功")
         sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+
         print sys_time + "\t" +  u"正式环境登录成功"
         global logged_in, logged_type
         logged_in = True
@@ -1020,20 +1044,24 @@ class LoginFrame(sized_controls.SizedDialog):
         
         if ret == '0':
             self.SetTitle(u"正式环境登录成功")
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" +  u"正式环境登录成功"
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" +  u"正式环境登录成功"
             global logged_in, logged_type
             logged_in = True
             logged_type = 'online'
             self.Close()
         elif ret == '1':            
             self.SetTitle(u"密码不正确")
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" +  u"密码不正确！"
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" +  u"密码不正确！"
         elif ret == '2':
             self.SetTitle(u"密码过期")
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" +  u"密码过期！"
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" +  u"密码过期！"
         else:
             self.SetTitle(u"登录失败")
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" +  u"登录失败！"
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" +  u"登录失败！"
         '''
 
     def on_btn_cancle(self, event):
@@ -1051,6 +1079,7 @@ def get_conf_file(type = 'test'):
     config = ConfigParser.ConfigParser()
     
     sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+
     print sys_time + "\t" +  "read local conf"        
     if type == 'test':
         conf = config.read("./conf/pos_51hupai.conf")
@@ -1122,15 +1151,18 @@ def get_conf_file(type = 'test'):
         return_btn_confirm_y = int(config.get('return_btn_confirm','y'))
         
         if first_login:
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" +  'setting new conf on first time'
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" +  'setting new conf on first time'
         else:
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))            print sys_time + "\t" +  'updating new conf'
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            print sys_time + "\t" +  'updating new conf'
         
         first_login = False
         pre_version = version
         
     else:
-        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))        print sys_time + "\t" +  "conf not changed"  
+        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        print sys_time + "\t" +  "conf not changed"  
 
 if __name__ == "__main__":
 
@@ -1148,15 +1180,16 @@ if __name__ == "__main__":
     sys_time_send = 0
     page_time_send = 0
     self_time_second = 0
-    force_time_second = 0  
-        
+    force_time_second = 0
     global flag
     flag = True
     
     app = wx.App(False)
     global frame
     frame = MyFrame(None, u"沪牌助手-2017年1月版")
-    frame.SetPosition((0,0))    #print frame.GetScreenPositionTuple()    #print frame.GetPosition()
+    frame.SetPosition((0,0))
+    #print frame.GetScreenPositionTuple()
+    #print frame.GetPosition()
     frame.Show()
     
     login_frame = LoginFrame(frame)
