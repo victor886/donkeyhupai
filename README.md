@@ -1,1 +1,1 @@
-# donkeyhupai - An agile tool for shanghai lisence plate bid, NOT FOR COMMERCIAL USAGE^_^
+# donkeyhupai - An agile tool for shanghai lisence plate bid, NOT FOR COMMERCIAL USE^_^
