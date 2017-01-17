@@ -240,7 +240,7 @@ def pricePlan():
 def autoConfirm():
     global sys_time_send, page_time_send, flag
     global btn_confirm_price, input_text_time, input_text_lowest_price
-    global force_send_time, advance_price, delay_time, advance_work_time, supply_price_time
+    global force_send_time, force_send_delay_second, advance_price, delay_time, advance_work_time, supply_price_time
     global confirm_x, confirm_y
     global return_btn_confirm_x, return_btn_confirm_y
     global self_price_x, self_price_y
@@ -304,13 +304,19 @@ def autoConfirm():
                     break
                 
             #强制网页55秒出价
-            if page_time >= force_send_time:                                
-                pyautogui.click(x=confirm_x, y=confirm_y) #确定
-                #btn_confirm_price.Enable(True)
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
-                print sys_time + "\t" +  u"到了强制出价时间，直接出价！"
-                break               
-
+            if page_time >= force_send_time:
+                if page_time == force_send_time:
+                    time.sleep(force_send_delay_second)
+                    pyautogui.click(x=confirm_x, y=confirm_y) #确定
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" +  u"到了强制出价时间，延迟设定的毫秒后，直接出价！"
+                    break
+                else:
+                    pyautogui.click(x=confirm_x, y=confirm_y) #确定
+                    sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print sys_time + "\t" +  u"超过强制出价时间，直接出价！"
+                    break
+                    
         #智能补抢
         if supply_price_flag:
             input_text_time.SetValue(u"等待返回")
@@ -322,9 +328,15 @@ def autoConfirm():
                     input_text_lowest_price.SetValue(u"不在监控")
                     sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
                     print sys_time + "\t" +  u"用户暂停"
-                    return                
+                    return
+                
                 return_btn = getReturnBtn()
                 if return_btn.find(u'确') != -1 or return_btn.find(u'定') != -1:
+                    #超过56秒就不补枪了
+                    page_time = getPageTime()
+                    if page_time > 56:
+                        print sys_time + "\t" +  u"服务器已经返回，但是时间是" +str(page_time) + "，将不进行补抢!"
+                        break
                     pyautogui.click(x = return_btn_confirm_x , y = return_btn_confirm_y) #确定
                     sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
                     print sys_time + "\t" +  u"服务器已经返回，将进行补抢!"
@@ -360,7 +372,6 @@ def autoConfirm():
                 print sys_time + "\t" +  u"等待补抢时机:" + "\t" + str(page_time) + "\t" + str(lowest_price)
                 
                 if page_time >= supply_price_time:
-
                     supply_price = 300
                     try:
                         if page_time < 40:
@@ -399,7 +410,8 @@ def checkConfUpdate():
             get_conf_file(logged_type)
             sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
             print sys_time + "\t" + "checking update"
-            time.sleep(300)
+            #time.sleep(300)
+            exit();
         else:
             time.sleep(1)
 
@@ -519,7 +531,7 @@ class MyFrame(wx.Frame):
         consoleSizer.Add(self.notebook, 1, wx.EXPAND|wx.ALL, 5)
         
         self.consolePanel.SetSizer(consoleSizer)
-        
+		
         # layout
         mainSizer.Add(self.ie, 10, wx.EXPAND)
         mainSizer.Add(self.consolePanel, 3, wx.EXPAND)
@@ -552,7 +564,7 @@ class MyFrame(wx.Frame):
     def on_close(self, event):
         global flag
         flag = False
-        dlg = wx.MessageDialog(self,u"                 感谢使用沪牌助手-2017年1月版！", u"确认", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
+        dlg = wx.MessageDialog(self,u"                 感谢使用沪牌助手-2017年2月版！", u"确认", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_OK:
@@ -706,7 +718,7 @@ class PageBasic(wx.Panel):
         static_text.SetFont(wx_font)  
         textSizer_force_send_time.Add(static_text)
         
-        self.input_text_force_send_time = FS.FloatSpin(self.consolePanel, -1, size=(50, -1), min_val=0, max_val=59, increment=1, value=55, digits=0, agwStyle=FS.FS_LEFT)
+        self.input_text_force_send_time = FS.FloatSpin(self.consolePanel, -1, size=(50, -1), min_val=0.0, max_val=59.0, increment=0.1, value=56.0, digits=1, agwStyle=FS.FS_LEFT)
         #self.input_text_force_send_time = wx.TextCtrl(self.consolePanel, -1, u'48', size=(50, -1)) 
         #self.input_text_force_send_time.GetTextCtrl().SetInsertionPoint(0)
         self.input_text_force_send_time.GetTextCtrl().SetForegroundColour('red')  #颜色
@@ -791,7 +803,7 @@ class PageBasic(wx.Panel):
         static_text.SetFont(wx_font)  
         textSizer_advance_send_work.Add(static_text)
         
-        self.input_text_advance_send_work = FS.FloatSpin(self.consolePanel, -1, size=(50, -1), min_val=0, max_val=59, increment=1, value=53, digits=0, agwStyle=FS.FS_LEFT)
+        self.input_text_advance_send_work = FS.FloatSpin(self.consolePanel, -1, size=(50, -1), min_val=0, max_val=59, increment=1, value=54, digits=0, agwStyle=FS.FS_LEFT)
         #self.input_text_advance_send_work = wx.TextCtrl(self.consolePanel, -1, u'50', size=(50, -1))
         #self.input_text_advance_send_work.SetInsertionPoint(0)
         self.input_text_advance_send_work.GetTextCtrl().SetForegroundColour('red')  #颜色
@@ -824,7 +836,7 @@ class PageBasic(wx.Panel):
         static_text.SetFont(wx_font)  
         textSizer_supply_price_time.Add(static_text)
         
-        self.input_text_supply_price_time = FS.FloatSpin(self.consolePanel, -1, size=(50, -1), min_val=0, max_val=59, increment=1, value=47, digits=0, agwStyle=FS.FS_LEFT)
+        self.input_text_supply_price_time = FS.FloatSpin(self.consolePanel, -1, size=(50, -1), min_val=0, max_val=59, increment=1, value=48, digits=0, agwStyle=FS.FS_LEFT)
         #self.input_text_supply_price_time = wx.TextCtrl(self.consolePanel, -1, u'47', size=(50, -1))
         #self.input_text_supply_price_time.SetInsertionPoint(0)
         self.input_text_supply_price_time.GetTextCtrl().SetForegroundColour('red')  #颜色
@@ -913,8 +925,8 @@ class PageBasic(wx.Panel):
             try:
                 self_time_second = int(self.input_text_add_price_time.GetTextCtrl().GetValue())
             except:
-                self_time_second = 40 
-            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+                self_time_second = 48
+                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
             print sys_time + "\t" + u"定时" + str(self_time_second) + u"秒加价启动"
             self.t_pricePlan = threading.Thread(target=pricePlan, args=())
             self.t_pricePlan.start()
@@ -922,13 +934,16 @@ class PageBasic(wx.Panel):
     
     def pressed_enter(self, event):
         global supply_price_flag, advance_send_price_flag
-        global force_send_time, advance_price, delay_time, advance_work_time, supply_price_time
+        global force_send_time, force_send_delay_second, advance_price, delay_time, advance_work_time, supply_price_time
         #self.panel.SetFocus()        
         if self.t_autoConfirm.isAlive() == False and self.t_pricePlan.isAlive() == False:            
             try:
-                force_send_time = int(self.input_text_force_send_time.GetTextCtrl().GetValue())
-            except:
-                force_send_time = 55
+                force_send_time_value = float(self.input_text_force_send_time.GetTextCtrl().GetValue())
+                force_send_time = int(force_send_time_value)                
+                force_send_delay_second = force_send_time_value - force_send_time
+            except:                
+                force_send_time = 56
+                force_send_delay_second = 0.0                
             
             #智能补抢标志
             if self.checkbox_supply_price.Value == True:
@@ -937,7 +952,7 @@ class PageBasic(wx.Panel):
                     supply_price_time = int(self.input_text_supply_price_time.GetTextCtrl().GetValue())
 
                 except:
-                    supply_price_time = 47
+                    supply_price_time = 48
             else:
                 supply_price_flag = False
              
@@ -951,11 +966,11 @@ class PageBasic(wx.Panel):
                 try:
                     delay_time = float(self.input_text_advance_send_delay.GetTextCtrl().GetValue())
                 except:
-                    delay_time = 0.5
+                    delay_time = 0.0
                 try:
                     advance_work_time = int(self.input_text_advance_send_work.GetTextCtrl().GetValue())
                 except:
-                    advance_work_time = 50
+                    advance_work_time = 54
             else:
                 advance_send_price_flag = False
                 advance_price = 0
@@ -1029,7 +1044,6 @@ class LoginFrame(sized_controls.SizedDialog):
     def on_btn_login(self, event):
         self.SetTitle(u"正式环境登录成功")
         sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
-
         print sys_time + "\t" +  u"正式环境登录成功"
         global logged_in, logged_type
         logged_in = True
@@ -1079,7 +1093,6 @@ def get_conf_file(type = 'test'):
     config = ConfigParser.ConfigParser()
     
     sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
-
     print sys_time + "\t" +  "read local conf"        
     if type == 'test':
         conf = config.read("./conf/pos_51hupai.conf")
@@ -1180,13 +1193,14 @@ if __name__ == "__main__":
     sys_time_send = 0
     page_time_send = 0
     self_time_second = 0
-    force_time_second = 0
+    force_time_second = 0  
+        
     global flag
     flag = True
     
     app = wx.App(False)
     global frame
-    frame = MyFrame(None, u"沪牌助手-2017年1月版")
+    frame = MyFrame(None, u"沪牌助手-2017年2月版")
     frame.SetPosition((0,0))
     #print frame.GetScreenPositionTuple()
     #print frame.GetPosition()
