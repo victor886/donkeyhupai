@@ -338,6 +338,7 @@ def autoConfirm():
                         btn_confirm_price.Enable(True)
                         input_text_time.SetValue(u"不在监控")
                         input_text_lowest_price.SetValue(u"不在监控")
+                        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
                         print sys_time + "\t" +  u"服务器已经返回，但是时间是" +str(page_time) + u"，超过56s，将不进行补抢!"
                         return
                     pyautogui.click(x = return_btn_confirm_x , y = return_btn_confirm_y) #确定
