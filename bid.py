@@ -309,7 +309,7 @@ def autoConfirm():
                     time.sleep(force_send_delay_second)
                     pyautogui.click(x=confirm_x, y=confirm_y) #确定
                     sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
-                    print sys_time + "\t" +  u"到了强制出价时间，延迟设定的毫秒后，直接出价！"
+                    print sys_time + "\t" +  u"到了强制出价时间，延迟" + str(force_send_delay_second) + u"秒后，直接出价！"
                     break
                 else:
                     pyautogui.click(x=confirm_x, y=confirm_y) #确定
@@ -335,8 +335,11 @@ def autoConfirm():
                     #超过56秒就不补枪了
                     page_time = getPageTime()
                     if page_time > 56:
-                        print sys_time + "\t" +  u"服务器已经返回，但是时间是" +str(page_time) + "，将不进行补抢!"
-                        break
+                        btn_confirm_price.Enable(True)
+                        input_text_time.SetValue(u"不在监控")
+                        input_text_lowest_price.SetValue(u"不在监控")
+                        print sys_time + "\t" +  u"服务器已经返回，但是时间是" +str(page_time) + u"，超过56s，将不进行补抢!"
+                        return
                     pyautogui.click(x = return_btn_confirm_x , y = return_btn_confirm_y) #确定
                     sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
                     print sys_time + "\t" +  u"服务器已经返回，将进行补抢!"
@@ -393,7 +396,8 @@ def autoConfirm():
         input_text_time.SetValue(u"不在监控")
         input_text_lowest_price.SetValue(u"不在监控")
         
-    except:        
+    except:
+        raise
         btn_confirm_price.Enable(True)
         input_text_time.SetValue(u"不在监控")
         input_text_lowest_price.SetValue(u"不在监控")
@@ -926,7 +930,7 @@ class PageBasic(wx.Panel):
                 self_time_second = int(self.input_text_add_price_time.GetTextCtrl().GetValue())
             except:
                 self_time_second = 48
-                sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+            sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
             print sys_time + "\t" + u"定时" + str(self_time_second) + u"秒加价启动"
             self.t_pricePlan = threading.Thread(target=pricePlan, args=())
             self.t_pricePlan.start()
