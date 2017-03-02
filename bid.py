@@ -415,8 +415,8 @@ def checkConfUpdate():
             get_conf_file(logged_type)
             sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
             print sys_time + "\t" + "checking update"
-            #time.sleep(300)
-            exit();
+            time.sleep(300)
+            #exit();
         else:
             time.sleep(1)
 
@@ -569,7 +569,7 @@ class MyFrame(wx.Frame):
     def on_close(self, event):
         global flag
         flag = False
-        dlg = wx.MessageDialog(self,u"                 感谢使用沪牌助手-2017年2月版！", u"确认", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
+        dlg = wx.MessageDialog(self,u"                 感谢使用沪牌助手-2017年3月版！", u"确认", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_OK:
@@ -1097,6 +1097,27 @@ def get_conf_file(type = 'test'):
     #屏幕坐标配置文件      
     config = ConfigParser.ConfigParser()
     
+    try:        
+        if type == 'test':
+            conf = urllib2.urlopen("http://cbf1488.duapp.com/conf_51hupai")
+        elif type == 'online':
+            conf = urllib2.urlopen("http://cbf1488.duapp.com/conf_online")
+        else:
+            conf = urllib2.urlopen("http://cbf1488.duapp.com/conf_51hupai")
+        config.readfp(conf)        
+
+    except:
+        #raise
+        sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
+        print sys_time + "\t" +  "read local conf"        
+        if type == 'test':
+            conf = config.read("./conf/pos_51hupai.conf")
+        elif type == 'online':
+            conf = config.read("./conf/pos_online.conf")
+        else:
+            conf = config.read("./conf/pos_51hupai.conf")  
+    
+    '''
     sys_time = str(datetime.now().strftime('%Y%m%d%H%M%S'))
     print sys_time + "\t" +  "read local conf"        
     if type == 'test':
@@ -1105,7 +1126,8 @@ def get_conf_file(type = 'test'):
         conf = config.read("./conf/pos_online.conf")
     else:
         conf = config.read("./conf/pos_51hupai.conf")
-            
+    '''
+    
     global first_login, version, pre_version
     version = int(config.get('version','version'))
     
@@ -1205,7 +1227,7 @@ if __name__ == "__main__":
     
     app = wx.App(False)
     global frame
-    frame = MyFrame(None, u"沪牌助手-2017年2月版")
+    frame = MyFrame(None, u"沪牌助手-2017年3月版")
     frame.SetPosition((0,0))
     #print frame.GetScreenPositionTuple()
     #print frame.GetPosition()
