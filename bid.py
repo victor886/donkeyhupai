@@ -203,9 +203,10 @@ def pricePlan():
     global sys_time_send, page_time_send, self_time_second, flag
     global btn_add_price, input_text_time
     try:
+        frame.SetPosition((0,0))
         btn_add_price.Enable(False)
         flag = True
-        while True:
+        while True:            
             #btn_add_price.SetBackgroundColour('Red')           
             if flag == False:
                 btn_add_price.Enable(True)
@@ -250,6 +251,7 @@ def autoConfirm():
     q_getLowestPrice = queue.Queue()    
     
     try:
+        frame.SetPosition((0,0))
         btn_confirm_price.Enable(False)
         my_price = getMyPrice()
         flag = True
@@ -513,8 +515,8 @@ class MyFrame(wx.Frame):
 
         #基本设置的tab        
         self.notebook = wx.Notebook(self.consolePanel)        
-        tab_basic = PageBasic(self.notebook)        
-        self.notebook.AddPage(tab_basic, u"主面板")
+        self.tab_basic = PageBasic(self.notebook)        
+        self.notebook.AddPage(self.tab_basic, u"主面板")
         wx_font = wx.Font(13, wx.MODERN, wx.NORMAL, wx.BOLD)
         self.notebook.SetFont(wx_font)        
         
@@ -553,10 +555,14 @@ class MyFrame(wx.Frame):
         id_ctrl = wx.NewId()
         id_escape = wx.NewId()
         id_f5 = wx.NewId()
-        self.Bind(wx.EVT_MENU, tab_basic.pressed_enter, id=id_enter)
-        self.Bind(wx.EVT_MENU, tab_basic.pressed_space, id=id_ctrl)
-        self.Bind(wx.EVT_MENU, tab_basic.pressed_escape, id=id_escape)
-        self.Bind(wx.EVT_MENU, tab_basic.pressed_f5, id=id_f5)
+        
+        #窗口最小化，杀死进程
+        self.Bind(wx.EVT_ICONIZE, self.on_iconify)
+        
+        self.Bind(wx.EVT_MENU, self.tab_basic.pressed_enter, id=id_enter)
+        self.Bind(wx.EVT_MENU, self.tab_basic.pressed_space, id=id_ctrl)
+        self.Bind(wx.EVT_MENU, self.tab_basic.pressed_escape, id=id_escape)
+        self.Bind(wx.EVT_MENU, self.tab_basic.pressed_f5, id=id_f5)
         accel_tbl = wx.AcceleratorTable([
             (wx.ACCEL_NORMAL, wx.WXK_RETURN, id_enter),
             (wx.ACCEL_NORMAL, wx.WXK_SPACE, id_ctrl),
@@ -565,6 +571,12 @@ class MyFrame(wx.Frame):
         ])
         self.SetAcceleratorTable(accel_tbl) 
         self.panel.SetFocus()
+    
+    def on_iconify(self, event):            
+        if self.tab_basic.t_pricePlan.isAlive() == True or self.tab_basic.t_autoConfirm.isAlive() == True:
+            print u"窗口被最小化了！停止运行！"
+            global flag
+            flag = False
     
     def on_close(self, event):
         global flag
