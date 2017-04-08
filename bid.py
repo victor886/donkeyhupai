@@ -120,7 +120,7 @@ def getPageTime(type = 'getPageTime', q = queue.Queue()):
         im.save('./log/' + 'getPageTime.bmp')
         pixImage = tesseract.pixRead('./log/' + 'getPageTime.bmp')
         api_page_time.SetImage(pixImage) 
-        page_time_string = api_page_time.GetUTF8Text().split("\n")[0].strip().replace(" ","")
+        page_time_string = api_page_time.GetUTF8Text().split("\n")[0].strip().replace(" ","")[-2:]
 
         page_time = int(page_time_string)
         q.put(page_time)
@@ -145,7 +145,7 @@ def getLowestPrice(type = 'getLowestPrice', q = queue.Queue()):
         im.save('./log/' + 'getLowestPrice.bmp')
         pixImage = tesseract.pixRead('./log/' + 'getLowestPrice.bmp')
         api_lowest_price.SetImage(pixImage) 
-        lowest_price_string = api_lowest_price.GetUTF8Text().split("\n")[0].strip().replace(" ","")
+        lowest_price_string = api_lowest_price.GetUTF8Text().split("\n")[0].strip().replace(" ","")[-5:]
 
         lowest_price =  int(lowest_price_string)
         q.put(lowest_price)
@@ -169,7 +169,7 @@ def getMyPrice():
         im.save('./log/' + 'getMyPrice.bmp')
         pixImage = tesseract.pixRead('./log/' + 'getMyPrice.bmp')
         api_my_price.SetImage(pixImage) 
-        my_price_string = api_my_price.GetUTF8Text().split("\n")[0].strip().replace(" ","")
+        my_price_string = api_my_price.GetUTF8Text().split("\n")[0].strip().replace(" ","")[-5:]
 
         my_price =  int(my_price_string)
         return my_price
@@ -569,13 +569,13 @@ class MyFrame(wx.Frame):
     def on_close(self, event):
         global flag
         flag = False
-        dlg = wx.MessageDialog(self,u"                 感谢使用沪牌助手-2017年3月版！", u"确认", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
+        dlg = wx.MessageDialog(self,u"                 感谢使用沪牌助手-2017年4月版！", u"确认", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()
         if result == wx.ID_OK:
             self.Destroy()
-        else:
-            event.skip()
+        #else:
+        #    event.skip()
      
 
 class PageManual(scrolled.ScrolledPanel):
@@ -1227,7 +1227,7 @@ if __name__ == "__main__":
     
     app = wx.App(False)
     global frame
-    frame = MyFrame(None, u"沪牌助手-2017年3月版")
+    frame = MyFrame(None, u"沪牌助手-2017年4月版")
     frame.SetPosition((0,0))
     #print frame.GetScreenPositionTuple()
     #print frame.GetPosition()
